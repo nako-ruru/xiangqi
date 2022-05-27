@@ -17,12 +17,14 @@ function load() {
 
             let recommendList = JSON.parse(recommendListJson).data;
             board = {
-                fen:  getItem("moves"),
+                fen:  getItem("fen"),
                 side: getItem("side"),
             }
             if(!board.fen) {
                 board = recommendList[0].fenList[0];
             }
+            let match = /^(?<fen>((?!\s+moves).)+)(\s+moves\s+(?<moves>.+))?$/.exec(board.fen);
+            vschess.defaultFen = match.groups["fen"];
             let params = {
                 startTips: ["蓝色的着法含有变着"],
                 defaultTab: "edit",
@@ -101,7 +103,7 @@ function makeRandomMove (chess) {
                         var list = chess.getMoveList();
                         var fen = list.shift().split(" ").slice(0, 2).join(" ");
                         var longData = list.length ? fen + " moves " + list.join(" ") : fen;
-                        setItem("moves", longData);
+                        setItem("fen", longData);
                     });
                 }
             });
